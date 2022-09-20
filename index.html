@@ -5,19 +5,51 @@
     <title> jSPsych </title>
     <script src="https://unpkg.com/jspsych@7.3.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.1"></script>
+    <link href="https://unpkg.com/jspsych@7.3.0/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.1"></script>
 </head>
 <body>
     <script> 
-        const jsPsych = initJsPsych(); 
-        const hello_trial = {
+        var jsPsych = initJsPsych({
+        on_finish: function() {
+            jsPsych.data.displayData()
+        }
+        });
+        /* once finished with experiment, show data - only for experimenter */
+        
+        var fixation1 = {
             type: jsPsychHtmlKeyboardResponse,
-            stimulus: 'Hello world!',
-            choices: ['Y', 'N'],
-            stimulus_duration: 1000,
-            prompt: 'Press Y or N',
+            stimulus: '<p style="font-size: 48px;">+</p>',
+            choices: "NO_KEYS",
+            trial_duration: 1000
         }
 
-        jsPsych.run([hello_trial]);
+        var sentence = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: 'You dropped a balloon on a vase',
+            choices: " "
+        /* the " " in the quotes signals that user needs to click spacebar in order for next cross to come up */
+        }
+
+        var fixation2 = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: '<p style="font-size: 48px;">+</p>',
+            choices: "NO_KEYS",
+            trial_duration: 500
+        }
+
+        var picture = {
+            type: jsPsychImageKeyboardResponse,
+            stimulus: "vase.jpeg",
+            choices: ['S', 'N', 's', 'n']
+        }
+
+        var end_experiment = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: 'Thank you for participating! Press any key to exit experiment',
+        }
+
+        jsPsych.run([fixation1, sentence, fixation2, picture, end_experiment]);
 
     </script>
 </body>
