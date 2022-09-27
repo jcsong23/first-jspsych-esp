@@ -8,6 +8,10 @@
     <link href="https://unpkg.com/jspsych@7.3.0/css/jspsych.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.1"></script>
     <script src="stimuli.js"></script>
+    <script src="list1.js"></script>
+    <script src="list2.js"></script>
+    <script src="list3.js"></script>
+    <script src="list4.js"></script>
 </head>
 <body>
     <script> 
@@ -17,55 +21,109 @@
         }
         });
         /* once finished with experiment, show data - only for experimenter */
+       
+        var subject_id = Math.floor(Math.random()*100000);
         
         var fixation1 = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: '<p style="font-size: 48px;">+</p>',
             choices: "NO_KEYS",
-            trial_duration: 1000
+            trial_duration: 1000,
+            data: {
+                typeoftrial: 'fixation',
+                list_number: jsPsych.timelineVariable('List'),
+                trialcondition: jsPsych.timelineVariable('condition'),
+                subject: subject_id
+            }
         }
 
         var sentence = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: jsPsych.timelineVariable('sentence'),
-            choices: " "
+            choices: " ",
+            data: {
+                typeoftrial: 'sentence',
+                list_number: jsPsych.timelineVariable('List'),
+                trialcondition: jsPsych.timelineVariable('condition'),
+                subject: subject_id
+            }
+        }
         /* the " " in the quotes signals that user needs to click spacebar in order for next cross to come up */
         /* replaced stimulus with different plugin */
-        }
 
         var fixation2 = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: '<p style="font-size: 48px;">+</p>',
             choices: "NO_KEYS",
-            trial_duration: 500
+            trial_duration: 500,
+            data: {
+                typeoftrial: 'fixation',
+                list_number: jsPsych.timelineVariable('List'),
+                trialcondition: jsPsych.timelineVariable('condition'),
+                subject: subject_id
+            }
         }
 
         var picture = {
             type: jsPsychImageKeyboardResponse,
             stimulus: jsPsych.timelineVariable('pic'),
-            choices: ['S', 'N', 's', 'n']
-        /* replaced stimulus with different plugin */
+            choices: ['S', 'N', 's', 'n'],
+            data: {
+                typeoftrial: 'picture',
+                list_number: jsPsych.timelineVariable('List'),
+                trialcondition: jsPsych.timelineVariable('condition'),
+                subject: subject_id
+            }
         }
+        /* replaced stimulus with different plugin */
+        
 
         var end_experiment = {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: 'Thank you for participating! Press any key to exit experiment',
+            data: {
+                typeoftrial: 'end of experiment',
+                list_number: jsPsych.timelineVariable('List'),
+                trialcondition: jsPsych.timelineVariable('condition'),
+                subject: subject_id
+            }
         }
+        
+        
+
+        var list = [1,2,3,4]
+        var CONDITION = list[Math.floor(Math.random() * list.length)];
+        // list is a list of numbers, indicator for 4 stimuli
+        // condition is variable but it randomly selects one number from the list of 4 numbers
+    
+        var teststimuli = []
+            if(CONDITION == 1){teststimuli = list1}
+            else if(CONDITION == 2){teststimuli = list2}
+            else if(CONDITION == 3){teststimuli = list3}
+            else{teststimuli = list4}
+        // we want every participant to circle through all our lists, so we define an empty variable
+        // Eventually, we want the empty variables to contain what we want them to see
+        // whatever is in condition, we assign a particular list to it
+        // Condition contains a random value from 1-4; so if random value is 1, it will assign list 1 etc
+
+        //console.log("list=", list)
+        //console.log("CONDITION=", CONDITION)
+        //console.log("teststimuli=", teststimuli)
+
 
         var experiment_procedure = {
             timeline: [fixation1, sentence, fixation2, picture],
-            /* tells js to show in this order, plug-ins defined before */
-            timeline_variables: stimuli,
-            /* just pick stimuli from the js list */
+            // tells js to show in this order, plug-ins defined before
+            timeline_variables: teststimuli,
+            // just pick stimuli from the js list
             randomize_order: true
-            /* randomizing order of the items */
+            // randomizing order of the items
         };
 
         jsPsych.run([experiment_procedure, end_experiment])
 
-        /*
-        jsPsych.run([fixation1, sentence, fixation2, picture, end_experiment]);
-        */
+        // jsPsych.run([fixation1, sentence, fixation2, picture, end_experiment]);
+
 
     </script>
 </body>
