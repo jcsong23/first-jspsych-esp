@@ -7,6 +7,7 @@
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.1"></script>
     <link href="https://unpkg.com/jspsych@7.3.0/css/jspsych.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.1"></script>
+    <script src="stimuli.js"></script>
 </head>
 <body>
     <script> 
@@ -26,9 +27,10 @@
 
         var sentence = {
             type: jsPsychHtmlKeyboardResponse,
-            stimulus: 'You dropped a balloon on a vase',
+            stimulus: jsPsych.timelineVariable('sentence'),
             choices: " "
         /* the " " in the quotes signals that user needs to click spacebar in order for next cross to come up */
+        /* replaced stimulus with different plugin */
         }
 
         var fixation2 = {
@@ -40,8 +42,9 @@
 
         var picture = {
             type: jsPsychImageKeyboardResponse,
-            stimulus: "vase.jpeg",
+            stimulus: jsPsych.timelineVariable('pic'),
             choices: ['S', 'N', 's', 'n']
+        /* replaced stimulus with different plugin */
         }
 
         var end_experiment = {
@@ -49,7 +52,20 @@
             stimulus: 'Thank you for participating! Press any key to exit experiment',
         }
 
+        var experiment_procedure = {
+            timeline: [fixation1, sentence, fixation2, picture],
+            /* tells js to show in this order, plug-ins defined before */
+            timeline_variables: stimuli,
+            /* just pick stimuli from the js list */
+            randomize_order: true
+            /* randomizing order of the items */
+        };
+
+        jsPsych.run([experiment_procedure, end_experiment])
+
+        /*
         jsPsych.run([fixation1, sentence, fixation2, picture, end_experiment]);
+        */
 
     </script>
 </body>
